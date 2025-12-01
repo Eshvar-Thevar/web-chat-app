@@ -1,0 +1,372 @@
+/* frontend/style.css */
+
+:root {
+  --bg-main: #2f3136;
+  --bg-secondary: #36393f;
+  --bg-sidebar: #202225;
+  --accent: #5865f2;
+  --accent-hover: #4752c4;
+  --text-main: #ffffff;
+  --text-muted: #b9bbbe;
+  --danger: #ed4245;
+  --border-radius: 8px;
+  --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-stack);
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* ---------- Auth page ---------- */
+
+.auth-container {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-card {
+  background: var(--bg-secondary);
+  padding: 24px;
+  border-radius: 12px;
+  width: 360px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.auth-card h1 {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.auth-card p {
+  margin-top: 0;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.auth-card label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.auth-card input[type="text"],
+.auth-card input[type="password"] {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #202225;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.auth-card button {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.auth-card button:hover {
+  background: var(--accent-hover);
+}
+
+.auth-toggle {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.auth-toggle button {
+  width: auto;
+  background: none;
+  color: var(--accent);
+  border: none;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+/* ---------- App layout ---------- */
+
+.app-root {
+  display: flex;
+  height: 100vh;
+  background: var(--bg-main);
+}
+
+/* Sidebar */
+
+.sidebar {
+  width: 260px;
+  background: var(--bg-sidebar);
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  gap: 12px;
+}
+
+.sidebar-section {
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius);
+  padding: 8px;
+}
+
+.sidebar-section h2 {
+  font-size: 14px;
+  margin: 0 0 6px 0;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.friend-list,
+.request-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.friend-item {
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.friend-item.active {
+  background: #3ba55c33;
+}
+
+.friend-item:hover {
+  background: #3a3c42;
+}
+
+.request-item {
+  font-size: 13px;
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.request-item span {
+  flex: 1;
+}
+
+.btn-small {
+  font-size: 11px;
+  padding: 4px 6px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-accept {
+  background: #3ba55c;
+  color: white;
+}
+
+.btn-reject {
+  background: var(--danger);
+  color: white;
+}
+
+.add-friend-form {
+  display: flex;
+  gap: 6px;
+}
+
+.add-friend-form input {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: none;
+  background: #202225;
+  color: var(--text-main);
+  font-size: 13px;
+}
+
+.add-friend-form button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.user-info {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ---------- Chat area ---------- */
+
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-main);
+}
+
+.chat-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid #202225;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header h1 {
+  font-size: 16px;
+  margin: 0;
+}
+
+.chat-header span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.chat-messages {
+  flex: 1;
+  padding: 12px 16px;
+  overflow-y: auto;
+  background: var(--bg-main);
+}
+
+.message-row {
+  margin-bottom: 8px;
+  display: flex;
+}
+
+/* incoming messages → left */
+.message-row.message-other {
+  justify-content: flex-start;
+}
+
+/* your own messages → right */
+.message-row.message-self {
+  justify-content: flex-end;
+}
+
+.message-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.message-bubble {
+  display: inline-flex;
+  flex-direction: column;
+  padding: 6px 10px;
+  border-radius: 12px;
+  font-size: 14px;
+  max-width: 70%;
+  word-wrap: break-word;
+  position: relative;
+}
+
+.message-self .message-bubble {
+  background: var(--accent);
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+}
+
+.message-other .message-bubble {
+  background: #4f545c;
+  color: #ffffff;
+  border-bottom-left-radius: 4px;
+}
+
+/* Timestamp inside bubbles */
+.bubble-time {
+  font-size: 10px;
+  color: var(--text-muted);
+  margin-top: 4px;
+  opacity: 0.8;
+  align-self: flex-end; /* default (right side) */
+}
+
+/* Shift timestamp to left for incoming messages */
+.message-other .bubble-time {
+  align-self: flex-start;
+}
+
+.chat-input {
+  padding: 10px 16px;
+  border-top: 1px solid #202225;
+  display: flex;
+  gap: 8px;
+  background: var(--bg-secondary);
+}
+
+#chat-upload-btn {
+  border: none;
+  border-radius: 6px;
+  background: #4f545c;
+  color: #ffffff;
+  font-size: 18px;
+  width: 40px;
+  cursor: pointer;
+}
+
+#chat-upload-btn:hover {
+  background: #5b5f67;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: none;
+  background: #202225;
+  color: var(--text-main);
+  font-size: 14px;
+}
+
+.chat-input button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background: var(--accent);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.chat-input button:hover {
+  background: var(--accent-hover);
+}
+
+.status-bar {
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 4px 16px;
+  border-top: 1px solid #202225;
+  background: var(--bg-secondary);
+}

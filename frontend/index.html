@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PingPong Web Chat - Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card" id="auth-card">
+      <h1 id="auth-title">Welcome back</h1>
+      <p id="auth-subtitle">Log in to your account</p>
+
+      <form id="auth-form">
+        <label for="username">Username</label>
+        <input id="username" type="text" autocomplete="username" required>
+
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+
+        <button type="submit" id="auth-submit">Log In</button>
+      </form>
+
+      <div class="auth-toggle">
+        <span id="auth-toggle-text">Need an account?</span>
+        <button type="button" id="auth-toggle-btn">Register</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = "http://localhost:8000";
+
+    let mode = "login"; // or "register"
+
+    const titleEl = document.getElementById("auth-title");
+    const subtitleEl = document.getElementById("auth-subtitle");
+    const submitBtn = document.getElementById("auth-submit");
+    const toggleText = document.getElementById("auth-toggle-text");
+    const toggleBtn = document.getElementById("auth-toggle-btn");
+    const form = document.getElementById("auth-form");
+    const usernameInput = document.getElementById("username");
+    const passwordInput = document.getElementById("password");
+
+    function setMode(newMode) {
+      mode = newMode;
+      if (mode === "login") {
+        titleEl.textContent = "Welcome back";
+        subtitleEl.textContent = "Log in to your account";
+        submitBtn.textContent = "Log In";
+        toggleText.textContent = "Need an account?";
+        toggleBtn.textContent = "Register";
+      } else {
+        titleEl.textContent = "Create an account";
+        subtitleEl.textContent = "Register to start chatting";
+        submitBtn.textContent = "Register";
+        toggleText.textContent = "Already have an account?";
+        toggleBtn.textContent = "Log In";
+      }
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      setMode(mode === "login" ? "register" : "login");
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const username = usernameInput.value.trim();
+      const password = passwordInput.value.trim();
+      if (!username || !password) return;
+
+      try {
+        if (mode === "register") {
+          const res = await fetch(API_BASE + "/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+          });
+          if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            alert("Register failed: " + (err.detail || res.statusText));
+            return;
+          }
+          alert("Registered! You can now log in.");
+          setMode("login");
+          return;
+        }
+
+        // Login mode
+        const res = await fetch(API_BASE + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          alert("Login failed: " + (err.detail || res.statusText));
+          return;
+        }
+        const data = await res.json();
+        // Save token & username and go to app
+        localStorage.setItem("chat_token", data.token);
+        localStorage.setItem("chat_username", data.username);
+        window.location.href = "app.html";
+      } catch (err) {
+        console.error(err);
+        alert("Network error. Is the backend running?");
+      }
+    });
+
+    // default mode is login
+    setMode("login");
+  </script>
+</body>
+</html>

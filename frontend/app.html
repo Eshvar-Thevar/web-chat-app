@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PingPong Web Chat</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-root">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h2>Account</h2>
+        <div class="user-info">
+          <div id="user-label"></div>
+          <button id="logout-btn" class="btn-small" style="margin-top:6px;background:#4f545c;color:white;">
+            Log out
+          </button>
+        </div>
+      </div>
+
+      <div class="sidebar-section">
+        <h2>Friends</h2>
+        <ul id="friend-list" class="friend-list">
+          <!-- filled by JS -->
+        </ul>
+        <form id="add-friend-form" class="add-friend-form">
+          <input id="add-friend-input" type="text" placeholder="Add friend by username">
+          <button type="submit">Add</button>
+        </form>
+      </div>
+
+      <div class="sidebar-section">
+        <h2>Requests</h2>
+        <ul id="incoming-requests" class="request-list"></ul>
+      </div>
+    </aside>
+
+    <!-- Chat area -->
+    <main class="chat-area">
+      <header class="chat-header">
+        <h1 id="chat-title">No friend selected</h1>
+        <span id="chat-subtitle">Choose a friend to start chatting.</span>
+      </header>
+
+      <section id="chat-messages" class="chat-messages">
+        <!-- filled by JS -->
+      </section>
+
+      <div class="chat-input">
+        <button id="chat-upload-btn" title="Send a file">📎</button>
+        <input id="chat-input-field" type="text" placeholder="Message..." disabled>
+        <button id="chat-send-btn" disabled>Send</button>
+        <input type="file" id="file-input" style="display:none;">
+      </div>
+
+      <div id="status-bar" class="status-bar">
+        Connecting...
+      </div>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
