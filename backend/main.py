@@ -11,13 +11,22 @@ import uuid
 
 import db
 
+"""
+PingPong Web Chat backend.
+
+Exposes:
+- HTTP/JSON API for auth, friends, history, and file upload
+- WebSocket endpoint for real-time 1-to-1 chat between friends
+
+All persistent data lives in SQLite via db.py.
+"""
 
 app = FastAPI(title="Web Chat App (Backend)")
 
 # Allow browser frontend to call the API (CORS)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],      # for local dev; you can restrict later
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -156,7 +165,8 @@ def me(token: str):
 
 # ---------- HTTP endpoints: friends ----------
 
-
+# Friend requests are a tiny "social" layer on top of basic accounts.
+# Users can only chat or share files with people that accepted their request.
 @app.post("/friends/request")
 def send_friend_request(token: str, body: FriendRequestBody):
     me = get_current_user(token)
@@ -191,12 +201,11 @@ def list_friends(token: str):
 
 # ---------- HTTP endpoints: message history ----------
 
-
+# Returns the stored message history between the logged-in user and a friend.
+# This is used when a chat is opened so the UI can show messages from SQLite
+# instead of starting from a blank screen after every refresh.
 @app.get("/history", response_model=List[MessageItem])
 def get_history(token: str, friend_username: str, limit: int = 100):
-    """
-    Get message history between the authenticated user and a friend.
-    """
     me = get_current_user(token)
     friend = db.get_user_by_username(friend_username.strip())
     if not friend:

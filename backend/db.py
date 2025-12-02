@@ -5,6 +5,17 @@ import hashlib
 import os
 from typing import Optional, Dict, Any, List
 
+"""
+SQLite helper functions for PingPong Web Chat.
+
+This module owns the schema for:
+- users, sessions       (identity + login)
+- friend_requests       (who is allowed to talk to whom)
+- messages              (chat history, including text and file links)
+
+The rest of the code only calls these functions instead of writing raw SQL.
+"""
+
 DB_PATH = "chat.db"
 
 
@@ -93,9 +104,6 @@ def init_db() -> None:
 def hash_password(password: str) -> str:
     """
     Very simple password hashing using SHA-256.
-
-    This is NOT production-grade security (no per-user salt, no iteration),
-    but is fine for a class project and much better than plain text.
     """
     return hashlib.sha256(password.encode("utf-8")).hexdigest()
 

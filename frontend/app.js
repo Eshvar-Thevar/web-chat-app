@@ -1,8 +1,19 @@
 // frontend/app.js
 
+// Frontend logic for PingPong Web Chat.
+//
+// Responsible for:
+// - logging in with the backend and keeping the token
+// - loading friend list + friend requests
+// - opening a WebSocket for real-time messages
+// - calling /history so each chat shows stored messages after refresh
+
 const API_BASE = "http://localhost:8000";
 const WS_URL = "ws://localhost:8000/ws/chat";
 
+// Minimal client-side state.  The server is the source of truth, but the
+// browser keeps per-friend message arrays so the UI can re-render quickly
+// without asking the backend on every keystroke.
 let token = null;
 let username = null;
 let ws = null;
@@ -27,6 +38,8 @@ const statusBar = document.getElementById("status-bar");
 const uploadBtn = document.getElementById("chat-upload-btn");
 const fileInput = document.getElementById("file-input");
 
+// Reads the token that index.html stored after login.
+// If it's missing, the user is sent back to the login page.
 function ensureAuth() {
   token = localStorage.getItem("chat_token");
   username = localStorage.getItem("chat_username");
@@ -50,6 +63,8 @@ function renderFriendList(friends) {
       li.classList.add("active");
     }
     li.addEventListener("click", async () => {
+        // When a friend is clicked we pull the latest history for that pair
+        // from the backend and then render from the local conversations map.
         activeFriend = f.username;
         chatTitle.textContent = f.username;
         chatSubtitle.textContent = `Chatting with ${f.username}`;
@@ -155,6 +170,9 @@ async function loadFriends() {
   }
 }
 
+// Calls GET /history to fetch past messages for this friend.
+// The result is normalized into the same shape the live WebSocket
+// messages use so the rest of the UI doesn't care where messages came from.
 async function loadHistoryForFriend(friendUsername) {
   try {
     setStatus("Loading history...");
@@ -273,6 +291,9 @@ fileInput.addEventListener("change", () => {
   fileInput.value = ""; // reset
 });
 
+// Calls GET /history to fetch past messages for this friend.
+// The result is normalized into the same shape the live WebSocket
+// messages use so the rest of the UI doesn't care where messages came from.
 function addMessage(friend, from, text, self, kind = "text", url = null) {
   if (!conversations[friend]) conversations[friend] = [];
   const ts = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -282,6 +303,8 @@ function addMessage(friend, from, text, self, kind = "text", url = null) {
   }
 }
 
+// Sends a text message over the WebSocket to the active friend.
+// The UI also adds an optimistic copy locally so the chat feels instant.
 function sendMessage() {
   if (!ws || ws.readyState !== WebSocket.OPEN) {
     alert("WebSocket not connected yet.");
@@ -299,6 +322,8 @@ function sendMessage() {
     to: activeFriend,
     text
   };
+  // The WebSocket "application message": must match what the backend
+  // expects in main.py (type, to, text fields).
   ws.send(JSON.stringify(msg));
 
   // Optimistically show our own message; server will echo too
@@ -306,6 +331,9 @@ function sendMessage() {
   chatInputField.value = "";
 }
 
+// Sends the selected file over HTTP (multipart/form-data) to /upload.
+// The backend responds by broadcasting a "file" message over WebSocket,
+// so both sides see the same clickable link in their chat history.
 async function uploadFile(file) {
   if (!activeFriend) {
     alert("Select a friend first.");
